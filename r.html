@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar Datos en JSON</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f7f6;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+      max-width:600px;
+      width:100%;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, select {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+    input:focus, select:focus {
+      border-color: #5ab9ea;
+      outline: none;
+    }
+    button {
+      padding: 12px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #5ab9ea;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #489ac4;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registro de Miembro</h2>
+    <form id="miembroForm">
+      <label for="nombre">Nombre Completo:</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="apellidos">Apellidos:</label>
+      <input type="text" id="apellidos" name="apellidos" required>
+
+      <label for="cedula">Número de Cédula:</label>
+      <input type="text" id="cedula" name="cedula" required>
+
+      <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+      <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+
+      <label for="email">Correo Electrónico:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="departamento">Departamento:</label>
+      <select id="departamento" name="departamento" required>
+        <option value="">Seleccione un departamento</option>
+        <!-- Opciones de departamentos -->
+      </select>
+
+      <label for="ciudad">Ciudad/Municipio:</label>
+      <select id="ciudad" name="ciudad" required>
+        <option value="">Seleccione una ciudad</option>
+        <!-- Opciones de ciudades -->
+      </select>
+
+      <label for="direccion">Dirección:</label>
+      <input type="text" id="direccion" name="direccion" required>
+
+      <div id="barrioContainer" class="hidden">
+        <label for="barrio">Barrio:</label>
+        <select id="barrio" name="barrio">
+          <option value="">Seleccione un barrio</option>
+          <!-- Opciones de barrios -->
+        </select>
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script>
+    // Envío del formulario en formato JSON
+    document.getElementById("miembroForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const documento = document.getElementById("documento").value;
+      const fecha = document.getElementById("fecha").value;
+      const data = { nombre, documento, fecha };
+
+      fetch('https://miembros-u1vg.shuttle.app/miembrocreate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(result => alert(result))
+      .catch(error => console.error('Error:', error));
+    });
+
+    fetch('https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al cargar el dataset');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Creamos un objeto con la estructura: { departamento: [ciudades] }
+        const departamentosYCiudades = {};
+        data.forEach(item => {
+          departamentosYCiudades[item.departamento] = item.ciudades;
+        });
+
+        const selectDepartamento = document.getElementById('departamento');
+        const selectCiudad = document.getElementById('ciudad');
+
+        // Llenamos el select de departamentos (orden alfabético)
+        Object.keys(departamentosYCiudades).sort().forEach(depto => {
+          const option = document.createElement('option');
+          option.value = depto;
+          option.textContent = depto;
+          selectDepartamento.appendChild(option);
+        });
+
+        // Actualizamos el select de ciudades al cambiar de departamento
+        selectDepartamento.addEventListener('change', () => {
+          selectCiudad.innerHTML = '<option value="">Seleccione una ciudad</option>';
+          const deptoSeleccionado = selectDepartamento.value;
+          if (deptoSeleccionado && departamentosYCiudades[deptoSeleccionado]) {
+            departamentosYCiudades[deptoSeleccionado].sort().forEach(ciudad => {
+              const option = document.createElement('option');
+              option.value = ciudad;
+              option.textContent = ciudad;
+              selectCiudad.appendChild(option);
+            });
+          }
+          // Reiniciamos dirección y barrios al cambiar departamento
+          document.getElementById('direccion').value = '';
+          document.getElementById('barriosContainer').style.display = 'none';
+          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
+        });
+
+        // Al cambiar la ciudad también reiniciamos la dirección y los barrios
+        selectCiudad.addEventListener('change', () => {
+          document.getElementById('direccion').value = '';
+          document.getElementById('barriosContainer').style.display = 'none';
+          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
+        });
+      })
+      .catch(error => console.error('Error al cargar el dataset:', error));
+
+    // Simulamos un objeto con barrios para determinadas ciudades (por ejemplo, Bogotá)
+    const barriosData = {
+      "Bogotá": ["Chapinero", "Usaquén", "Suba", "Teusaquillo", "Santa Fe", "La Candelaria", "Engativá", "Bosa", "Kennedy", "Fontibón"]
+      // Puedes agregar más ciudades y sus respectivos barrios si lo requieres
+    };
+
+    // Cuando se pierde el foco del input de dirección, verificamos si existen barrios para la ciudad seleccionada
+    document.getElementById('direccion').addEventListener('blur', function() {
+      const direccion = this.value.trim();
+      const ciudadSeleccionada = document.getElementById('ciudad').value;
+      if (direccion && ciudadSeleccionada) {
+        // Verificamos si existe un listado de barrios para la ciudad seleccionada
+        if (barriosData[ciudadSeleccionada]) {
+          const selectBarrio = document.getElementById('barrio');
+          selectBarrio.innerHTML = '<option value="">Seleccione un barrio</option>';
+          barriosData[ciudadSeleccionada].forEach(barrio => {
+            const option = document.createElement('option');
+            option.value = barrio;
+            option.textContent = barrio;
+            selectBarrio.appendChild(option);
+          });
+          document.getElementById('barriosContainer').style.display = 'block';
+        } else {
+          document.getElementById('barriosContainer').style.display = 'none';
+          alert('No hay datos de barrios para la ciudad seleccionada.');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
