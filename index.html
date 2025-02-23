@@ -119,10 +119,6 @@
       const departamento = document.getElementById("departamento").value;
       const ciudad = document.getElementById("ciudad").value;
       const direccion = document.getElementById("direccion").value;
-
-      if (document.getElementById("barrioContainer").style.display !== "none") {
-          barrio = document.getElementById("barrio").value;
-      }
       const data = { nombre, apellidos, cedula, fechaN, email, departamento, ciudad, direccion};
 
       fetch('https://miembros-u1vg.shuttle.app/miembrocreate', {
