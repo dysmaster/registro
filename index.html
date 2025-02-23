@@ -168,7 +168,15 @@
               selectCiudad.appendChild(option);
             });
           }
-        
+          document.getElementById('direccion').value = '';
+          document.getElementById('barrioContainer').style.display = 'none';
+          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
+        });
+
+        selectCiudad.addEventListener('change', () => {
+          document.getElementById('direccion').value = '';
+          document.getElementById('barrioContainer').style.display = 'none';
+          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
         });
       })
       .catch(error => console.error('Error al cargar el dataset:', error));
@@ -182,21 +190,7 @@
       const direccion = this.value.trim();
       const ciudadSeleccionada = document.getElementById('ciudad').value;
       if (direccion && ciudadSeleccionada) {
-        // Verificamos si existe un listado de barrios para la ciudad seleccionada
-        if (barriosData[ciudadSeleccionada]) {
-          const selectBarrio = document.getElementById('barrio');
-          selectBarrio.innerHTML = '<option value="">Seleccione un barrio</option>';
-          barriosData[ciudadSeleccionada].forEach(barrio => {
-            const option = document.createElement('option');
-            option.value = barrio;
-            option.textContent = barrio;
-            selectBarrio.appendChild(option);
-          });
-          document.getElementById('barrioContainer').style.display = 'block';
-        } else {
-          document.getElementById('barrioContainer').style.display = 'none';
-          alert('No hay datos de barrios para la ciudad seleccionada.');
-        }
+        console.log('local:')
       }
     });
   </script>
