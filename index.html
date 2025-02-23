@@ -172,12 +172,6 @@
           document.getElementById('barrioContainer').style.display = 'none';
           document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
         });
-
-        selectCiudad.addEventListener('change', () => {
-          document.getElementById('direccion').value = '';
-          document.getElementById('barrioContainer').style.display = 'none';
-          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
-        });
       })
       .catch(error => console.error('Error al cargar el dataset:', error));
 
