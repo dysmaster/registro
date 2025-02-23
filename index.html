@@ -103,13 +103,6 @@
       <label for="direccion">Dirección:</label>
       <input type="text" id="direccion" name="direccion" required>
 
-      <div id="barrioContainer" class="hidden">
-        <label for="barrio">Barrio:</label>
-        <select id="barrio" name="barrio">
-          <option value="">Seleccione un barrio</option>
-        </select>
-      </div>
-
       <button type="submit">Enviar</button>
     </form>
   </div>
@@ -175,9 +168,7 @@
               selectCiudad.appendChild(option);
             });
           }
-          document.getElementById('direccion').value = '';
-          document.getElementById('barrioContainer').style.display = 'none';
-          document.getElementById('barrio').innerHTML = '<option value="">Seleccione un barrio</option>';
+        
         });
 
         selectCiudad.addEventListener('change', () => {
