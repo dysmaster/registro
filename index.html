@@ -82,10 +82,8 @@
       <label for="cedula">Número de Cédula:</label>
       <input type="text" id="cedula" name="cedula" required>
 
-      <label for="fileInput">Subir Imagen a Cloudinary</label>
-      <!-- Input para seleccionar el archivo -->
+      <label for="fileInput">Subir Imagen de Documento</label>
       <input type="file" id="fileInput" accept="image/*">
-      <!-- Botón para subir la imagen -->
 
       <label for="fechaN">Fecha de Nacimiento:</label>
       <input type="date" id="fechaN" name="fechaN" required>
@@ -113,15 +111,11 @@
   </div>
 
   <script>
-    // Envío del formulario en formato JSON
-    // URL del endpoint de Cloudinary y de creación de miembro
-const URI_CLOUDINARY = "https://api.cloudinary.com/v1_1/dfuowmphp/image/upload";
-const URI_MIEMBRO = "https://miembros-u1vg.shuttle.app/miembrocreate";
+const URI0 = "https://api.cloudinary.com/v1_1/dfuowmphp/image/upload";
+const URI1 = "https://miembros-u1vg.shuttle.app/miembrocreate";
 
-// Variable global para almacenar la URL de la imagen ya subida
 let uploadedImageUrl = null;
 
-// Evento para subir la imagen cuando el usuario la seleccione
 document.getElementById("fileInput").addEventListener("change", async function (e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -131,7 +125,7 @@ document.getElementById("fileInput").addEventListener("change", async function (
   formData.append("upload_preset", "ml_default");
 
   try {
-    const responseCloudinary = await fetch(URI_CLOUDINARY, {
+    const responseCloudinary = await fetch(URI0, {
       method: "POST",
       body: formData
     });
@@ -148,8 +142,6 @@ document.getElementById("fileInput").addEventListener("change", async function (
     alert("No se pudo subir la imagen. Intenta nuevamente.");
   }
 });
-
-// Evento para enviar el formulario
 document.getElementById("miembroForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -158,8 +150,6 @@ document.getElementById("miembroForm").addEventListener("submit", async function
     alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");
     return;
   }
-
-  // Recopilar los datos del formulario, incluyendo la URL de la imagen
   const data = {
     nombre: document.getElementById("nombre").value,
     apellidos: document.getElementById("apellidos").value,
@@ -169,11 +159,11 @@ document.getElementById("miembroForm").addEventListener("submit", async function
     departamento: document.getElementById("departamento").value,
     ciudad: document.getElementById("ciudad").value,
     direccion: document.getElementById("direccion").value,
-    imagen: uploadedImageUrl // URL obtenida de Cloudinary
+    imagen: uploadedImageUrl 
   };
 
   try {
-    const responseMiembro = await fetch(URI_MIEMBRO, {
+    const responseMiembro = await fetch(URI1, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
