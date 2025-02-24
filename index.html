@@ -82,6 +82,11 @@
       <label for="cedula">Número de Cédula:</label>
       <input type="text" id="cedula" name="cedula" required>
 
+      <label for="fileInput">Subir Imagen a Cloudinary</label>
+      <!-- Input para seleccionar el archivo -->
+      <input type="file" id="fileInput" accept="image/*">
+      <!-- Botón para subir la imagen -->
+
       <label for="fechaN">Fecha de Nacimiento:</label>
       <input type="date" id="fechaN" name="fechaN" required>
 
@@ -109,27 +114,78 @@
 
   <script>
     // Envío del formulario en formato JSON
-    document.getElementById("miembroForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const nombre = document.getElementById("nombre").value;
-      const apellidos = document.getElementById("apellidos").value;
-      const cedula = document.getElementById("cedula").value;
-      const fechaN = document.getElementById("fechaN").value;
-      const email = document.getElementById("email").value;
-      const departamento = document.getElementById("departamento").value;
-      const ciudad = document.getElementById("ciudad").value;
-      const direccion = document.getElementById("direccion").value;
-      const data = { nombre, apellidos, cedula, fechaN, email, departamento, ciudad, direccion};
+    // URL del endpoint de Cloudinary y de creación de miembro
+const URI_CLOUDINARY = "https://api.cloudinary.com/v1_1/dfuowmphp/image/upload";
+const URI_MIEMBRO = "https://miembros-u1vg.shuttle.app/miembrocreate";
 
-      fetch('https://miembros-u1vg.shuttle.app/miembrocreate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(result => alert(result))
-      .catch(error => console.error('Error:', error));
+// Variable global para almacenar la URL de la imagen ya subida
+let uploadedImageUrl = null;
+
+// Evento para subir la imagen cuando el usuario la seleccione
+document.getElementById("fileInput").addEventListener("change", async function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "ml_default");
+
+  try {
+    const responseCloudinary = await fetch(URI_CLOUDINARY, {
+      method: "POST",
+      body: formData
     });
+    const cloudinaryData = await responseCloudinary.json();
+
+    if (cloudinaryData.secure_url) {
+      uploadedImageUrl = cloudinaryData.secure_url;
+      console.log("Imagen subida correctamente:", uploadedImageUrl);
+    } else {
+      throw new Error("Error al obtener secure_url");
+    }
+  } catch (error) {
+    console.error("Error al subir la imagen:", error);
+    alert("No se pudo subir la imagen. Intenta nuevamente.");
+  }
+});
+
+// Evento para enviar el formulario
+document.getElementById("miembroForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  // Verificar que la imagen ya se haya subido
+  if (!uploadedImageUrl) {
+    alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");
+    return;
+  }
+
+  // Recopilar los datos del formulario, incluyendo la URL de la imagen
+  const data = {
+    nombre: document.getElementById("nombre").value,
+    apellidos: document.getElementById("apellidos").value,
+    cedula: document.getElementById("cedula").value,
+    fechaN: document.getElementById("fechaN").value,
+    email: document.getElementById("email").value,
+    departamento: document.getElementById("departamento").value,
+    ciudad: document.getElementById("ciudad").value,
+    direccion: document.getElementById("direccion").value,
+    imagen: uploadedImageUrl // URL obtenida de Cloudinary
+  };
+
+  try {
+    const responseMiembro = await fetch(URI_MIEMBRO, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const result = await responseMiembro.text();
+    alert(result);
+  } catch (error) {
+    console.error("Error al enviar los datos del miembro:", error);
+    alert("Hubo un error al enviar la información. Inténtalo de nuevo.");
+  }
+});
+
     
     fetch('https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json')
       .then(response => {
@@ -169,8 +225,7 @@
       .catch(error => console.error('Error al cargar el dataset:', error));
 
     const barriosData = {
-      "Bogotá": ["Chapinero", "Usaquén", "Suba", "Teusaquillo", "Santa Fe", "La Candelaria", "Engativá", "Bosa", "Kennedy", "Fontibón"]
-      
+      "Bogotá": ["Chapinero", "Usaquén", "Suba", "Teusaquillo", "Santa Fe", "La Candelaria", "Engativá", "Bosa", "Kennedy", "Fontibón"]     
     };
 
     document.getElementById('direccion').addEventListener('blur', function() {
