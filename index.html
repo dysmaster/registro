@@ -83,7 +83,7 @@
       <input type="text" id="cedula" name="cedula" required>
 
       <label for="fileInput">Subir Imagen de Documento</label>
-      <input type="file" id="fileInput" accept="image/*">
+      <input type="file" id="fileInput" accept="image/*" required>
 
       <label for="fechaN">Fecha de Nacimiento:</label>
       <input type="date" id="fechaN" name="fechaN" required>
@@ -106,6 +106,9 @@
       <label for="direccion">Dirección:</label>
       <input type="text" id="direccion" name="direccion" required>
 
+      <label for="barrio">Barrio</label>
+      <input type="text" id="mibarro" name="mibarro" required>
+
       <button type="submit">Enviar</button>
     </form>
   </div>
@@ -114,7 +117,7 @@
 const URI0 = "https://api.cloudinary.com/v1_1/dfuowmphp/image/upload";
 const URI1 = "https://miembros-u1vg.shuttle.app/miembrocreate";
 
-let uploadedImageUrl = null;
+let upIU = null;
 
 document.getElementById("fileInput").addEventListener("change", async function (e) {
   const file = e.target.files[0];
@@ -132,8 +135,8 @@ document.getElementById("fileInput").addEventListener("change", async function (
     const cloudinaryData = await responseCloudinary.json();
 
     if (cloudinaryData.secure_url) {
-      uploadedImageUrl = cloudinaryData.secure_url;
-      console.log("Imagen subida correctamente:", uploadedImageUrl);
+      upIU = cloudinaryData.secure_url;
+      //console.log("Imagen subida correctamente:", upIU);
     } else {
       throw new Error("Error al obtener secure_url");
     }
@@ -145,8 +148,7 @@ document.getElementById("fileInput").addEventListener("change", async function (
 document.getElementById("miembroForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  // Verificar que la imagen ya se haya subido
-  if (!uploadedImageUrl) {
+  if (!upIU) {
     alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");
     return;
   }
@@ -159,7 +161,8 @@ document.getElementById("miembroForm").addEventListener("submit", async function
     departamento: document.getElementById("departamento").value,
     ciudad: document.getElementById("ciudad").value,
     direccion: document.getElementById("direccion").value,
-    imagen: uploadedImageUrl 
+    barrio: document.getElementById("mibarro").value,
+    imagen:upIU 
   };
 
   try {
