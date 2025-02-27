@@ -389,11 +389,490 @@
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script defer>
-    flatpickr("#fechaN", {
-      dateFormat: "d/m/Y",
-      disableMobile: true
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize form elements
+      initializeDatePicker();
+      initializeFileUpload();
+      loadDepartments();
+      setupFormValidation();
+      
+      // Form submission
+      document.getElementById('miembroForm').addEventListener('submit', handleFormSubmit);
     });
-    const URI0="https://api.cloudinary.com/v1_1/dfuowmphp/image/upload",URI1="https://miembros-u1vg.shuttle.app/miembrocreate";let upIU=null;document.getElementById("fileInput").addEventListener("change",(async function(e){const t=e.target.files[0];if(!t)return;const n=new FormData;n.append("file",t),n.append("upload_preset","ml_default");try{const e=await fetch(URI0,{method:"POST",body:n}),t=await e.json();if(!t.secure_url)throw new Error("Error al obtener secure_url");upIU=t.secure_url}catch(e){console.error("Error al subir la imagen:",e),alert("No se pudo subir la imagen. Intenta nuevamente.")}})),document.getElementById("miembroForm").addEventListener("submit",(async function(e){if(e.preventDefault(),document.getElementById("loaderContainer").style.display="flex",!upIU)return void alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");const t={nombre:document.getElementById("nombre").value,apellidos:document.getElementById("apellidos").value,cedula:document.getElementById("cedula").value,fechaN:document.getElementById("fechaN").value,email:document.getElementById("email").value,departamento:document.getElementById("departamento").value,ciudad:document.getElementById("ciudad").value,direccion:document.getElementById("direccion").value,barrio:document.getElementById("mibarro").value,imagen:upIU};try{const e=await fetch(URI1,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}),n=await e.text();document.getElementById("miembroForm").reset(),showToast("success",`Datos enviados correctamente:${n}`)}catch(e){console.error("Error al enviar los datos del miembro:",e)}finally{document.getElementById("loaderContainer").style.display="none"}})),fetch("https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json").then((e=>{if(!e.ok)throw new Error("Error al cargar el dataset");return e.json()})).then((e=>{const t={};e.forEach((e=>{t[e.departamento]=e.ciudades}));const n=document.getElementById("departamento"),o=document.getElementById("ciudad");Object.keys(t).sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,n.appendChild(t)})),n.addEventListener("change",(()=>{o.innerHTML='<option value="">Seleccione una ciudad</option>';const e=n.value;e&&t[e]&&t[e].sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,o.appendChild(t)}))}))})).catch((e=>console.error("Error al cargar el dataset:",e)));const barriosData={"Bogotá":["Chapinero","Usaquén","Suba","Teusaquillo","Santa Fe","La Candelaria","Engativá","Bosa","Kennedy","Fontibón"]};function showToast(e,t){const n=document.getElementById("toast"),o=document.getElementById("che"),a=document.getElementById("no");n?(n.className="toast "+e,"success"===e?(o.style.display="block",a.style.display="none"):"error"===e&&(o.style.display="none",a.style.display="block"),n.innerHTML=("success"===e?o.outerHTML:a.outerHTML)+`<span>${t}</span>`,n.style.display="flex",setTimeout((()=>{n.style.display="none"}),3e3)):console.error("El elemento con id 'toast' no existe.")}document.getElementById("direccion").addEventListener("blur",(function(){const e=this.value.trim(),t=document.getElementById("ciudad").value;e&&t&&console.log("local:")}));
+    
+    // Constants
+    const API_ENDPOINTS = {
+      CLOUDINARY_UPLOAD: 'https://api.cloudinary.com/v1_1/dfuowmphp/image/upload',
+      MEMBER_CREATE: 'https://miembros-u1vg.shuttle.app/miembrocreate',
+      COLOMBIA_DATA: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json'
+    };
+    
+    // Global variables
+    let uploadedImageUrl = null;
+    let isUploading = false;
+    
+    // Initialize date picker
+    function initializeDatePicker() {
+      flatpickr("#fechaN", {
+        dateFormat: "d/m/Y",
+        disableMobile: true,
+        maxDate: new Date(),
+        onChange: function(selectedDates, dateStr) {
+          validateField('fechaN', dateStr);
+        }
+      });
+    }
+    
+    // Initialize file upload
+    function initializeFileUpload() {
+      const fileInput = document.getElementById('fileInput');
+      const imagePreview = document.getElementById('imagePreview');
+      const fileName = document.getElementById('fileName');
+      const dropZone = document.querySelector('.file-upload');
+      
+      // Handle file selection
+      fileInput.addEventListener('change', function(e) {
+        handleFileSelection(e.target.files[0]);
+      });
+      
+      // Handle drag and drop
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, function() {
+          dropZone.classList.add('dragover');
+        }, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, function() {
+          dropZone.classList.remove('dragover');
+        }, false);
+      });
+      
+      dropZone.addEventListener('drop', function(e) {
+        const file = e.dataTransfer.files[0];
+        handleFileSelection(file);
+      }, false);
+      
+      function handleFileSelection(file) {
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.match('image.*')) {
+          showError('fileInput', 'El archivo debe ser una imagen (JPG, PNG, etc.)');
+          return;
+        }
+        
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          showError('fileInput', 'La imagen no debe exceder 5MB');
+          return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+          fileName.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+        
+        // Upload to Cloudinary
+        uploadImageToCloudinary(file);
+      }
+    }
+    
+    // Upload image to Cloudinary
+    async function uploadImageToCloudinary(file) {
+      if (isUploading) return;
+      
+      isUploading = true;
+      showLoading(true);
+      
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'ml_default');
+        
+        const response = await fetch(API_ENDPOINTS.CLOUDINARY_UPLOAD, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        
+        const data = await response.json();
+        
+        if (!data.secure_url) {
+          throw new Error('Error al obtener secure_url');
+        }
+        
+        uploadedImageUrl = data.secure_url;
+        hideError('fileInput');
+      } catch (error) {
+        console.error('Error al subir la imagen:', error);
+        showError('fileInput', 'No se pudo subir la imagen. Intenta nuevamente.');
+        uploadedImageUrl = null;
+      } finally {
+        isUploading = false;
+        showLoading(false);
+      }
+    }
+    
+    // Load departments
+    async function loadDepartments() {
+      try {
+        const response = await fetch(API_ENDPOINTS.COLOMBIA_DATA);
+        
+        if (!response.ok) {
+          throw new Error('Error al cargar el dataset');
+        }
+        
+        const data = await response.json();
+        
+        // Create department-city map
+        const departmentCityMap = {};
+        data.forEach(item => {
+          departmentCityMap[item.departamento] = item.ciudades;
+        });
+        
+        // Populate departments dropdown
+        const departmentSelect = document.getElementById('departamento');
+        Object.keys(departmentCityMap).sort().forEach(department => {
+          const option = document.createElement('option');
+          option.value = department;
+          option.textContent = department;
+          departmentSelect.appendChild(option);
+        });
+        
+        // Handle department change
+        departmentSelect.addEventListener('change', function() {
+          populateCities(departmentCityMap, this.value);
+          validateField('departamento', this.value);
+        });
+      } catch (error) {
+        console.error('Error al cargar el dataset:', error);
+        showToast('error', 'Error al cargar los departamentos. Por favor recarga la página.');
+      }
+    }
+    
+    // Populate cities based on selected department
+    function populateCities(departmentCityMap, department) {
+      const citySelect = document.getElementById('ciudad');
+      citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+      
+      if (department && departmentCityMap[department]) {
+        departmentCityMap[department].sort().forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }
+      
+      // Clear city validation since it has been reset
+      document.getElementById('ciudad-error').style.display = 'none';
+      citySelect.classList.remove('input-error');
+      
+      // Add change listener to city select
+      citySelect.addEventListener('change', function() {
+        validateField('ciudad', this.value);
+      });
+    }
+    
+    // Set up form validation
+    function setupFormValidation() {
+      // Add blur event listeners to all required fields
+      const requiredFields = document.querySelectorAll('[required]');
+      requiredFields.forEach(field => {
+        if (field.id !== 'fileInput' && field.id !== 'terms') {
+          field.addEventListener('blur', function() {
+            validateField(this.id, this.value);
+          });
+          
+          field.addEventListener('input', function() {
+            if (this.classList.contains('input-error')) {
+              validateField(this.id, this.value);
+            }
+          });
+        }
+      });
+      
+      // Special handling for terms checkbox
+      document.getElementById('terms').addEventListener('change', function() {
+        validateField('terms', this.checked);
+      });
+      
+      document.getElementById('ciudad').addEventListener('change', function() {
+        validateField('ciudad', this.value);
+      });
+    }
+    
+    // Validate a single field
+    function validateField(fieldId, value) {
+      switch(fieldId) {
+        case 'nombre':
+        case 'apellidos':
+          if (!value.trim()) {
+            showError(fieldId, `Por favor ingrese sus ${fieldId}.`);
+            return false;
+          }
+          break;
+          
+        case 'cedula':
+          if (!value.trim()) {
+            showError(fieldId, 'Por favor ingrese su número de cédula.');
+            return false;
+          }
+          if (!/^[0-9]{6,12}$/.test(value)) {
+            showError(fieldId, 'Por favor ingrese un número de cédula válido (6-12 dígitos).');
+            return false;
+          }
+          break;
+          
+        case 'email':
+          if (!value.trim()) {
+            showError(fieldId, 'Por favor ingrese su correo electrónico.');
+            return false;
+          }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+            showError(fieldId, 'Por favor ingrese un correo electrónico válido.');
+            return false;
+          }
+          break;
+          
+        case 'fechaN':
+          if (!value.trim()) {
+            showError(fieldId, 'Por favor seleccione su fecha de nacimiento.');
+            return false;
+          }
+          break;
+          
+        case 'departamento':
+        case 'ciudad':
+          if (!value) {
+            showError(fieldId, `Por favor seleccione un ${fieldId}.`);
+            return false;
+          }
+          break;
+          
+        case 'direccion':
+        case 'mibarro':
+          if (!value.trim()) {
+            showError(fieldId, `Por favor ingrese su ${fieldId === 'mibarro' ? 'barrio' : 'dirección'}.`);
+            return false;
+          }
+          break;
+          
+        case 'terms':
+          if (!value) {
+            showError(fieldId, 'Debe aceptar los términos y condiciones.');
+            return false;
+          }
+          break;
+      }
+      
+      hideError(fieldId);
+      return true;
+    }
+    
+    // Show validation error
+    function showError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      const errorElement = document.getElementById(`${fieldId}-error`);
+      
+      if (field && errorElement) {
+        field.classList.add('input-error');
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+      }
+    }
+    
+    // Hide validation error
+    function hideError(fieldId) {
+      const field = document.getElementById(fieldId);
+      const errorElement = document.getElementById(`${fieldId}-error`);
+      
+      if (field && errorElement) {
+        field.classList.remove('input-error');
+        errorElement.style.display = 'none';
+      }
+    }
+    
+    // Validate the entire form
+    function validateForm() {
+      let isValid = true;
+      
+      // Validate all required fields
+      const requiredFields = [
+        'nombre', 'apellidos', 'cedula', 'fechaN', 
+        'email', 'departamento', 'ciudad', 'direccion', 'mibarro'
+      ];
+      
+      requiredFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (!validateField(fieldId, field.value)) {
+          isValid = false;
+        }
+      });
+      
+      // Validate terms
+      if (!document.getElementById('terms').checked) {
+        showError('terms', 'Debe aceptar los términos y condiciones.');
+        isValid = false;
+      }
+      
+      // Validate image
+      if (!uploadedImageUrl) {
+        showError('fileInput', 'Por favor suba una imagen de su documento.');
+        isValid = false;
+      }
+      
+      return isValid;
+    }
+    
+    // Handle form submission
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      // Check if image is still uploading
+      if (isUploading) {
+        showToast('error', 'La imagen aún se está subiendo. Por favor espere.');
+        return;
+      }
+      
+      // Validate form
+      if (!validateForm()) {
+        showToast('error', 'Por favor corrija los errores en el formulario.');
+        return;
+      }
+      
+      showLoading(true);
+      
+      try {
+        // Prepare form data
+        const formData = {
+          nombre: document.getElementById('nombre').value,
+          apellidos: document.getElementById('apellidos').value,
+          cedula: document.getElementById('cedula').value,
+          fechaN: document.getElementById('fechaN').value,
+          email: document.getElementById('email').value,
+          departamento: document.getElementById('departamento').value,
+          ciudad: document.getElementById('ciudad').value,
+          direccion: document.getElementById('direccion').value,
+          barrio: document.getElementById('mibarro').value,
+          imagen: uploadedImageUrl
+        };
+        
+        // Send data to server
+        const response = await fetch(API_ENDPOINTS.MEMBER_CREATE, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.getElementById('csrf_token').value
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Error del servidor: ${response.status}`);
+        }
+        
+        const result = await response.text();
+        
+        // Reset form
+        document.getElementById('miembroForm').reset();
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('fileName').textContent = '';
+        uploadedImageUrl = null;
+        
+        showToast('success', 'Registro completado con éxito.');
+      } catch (error) {
+        console.error('Error al enviar los datos:', error);
+        showToast('error', 'Error al enviar los datos. Por favor intente nuevamente.');
+      } finally {
+        showLoading(false);
+      }
+    }
+    
+    // Show/hide loading spinner
+    function showLoading(show) {
+      document.getElementById('loaderContainer').style.display = show ? 'flex' : 'none';
+      document.getElementById('submitButton').disabled = show;
+    }
+    
+    // Show toast notification
+    function showToast(type, message) {
+      const toast = document.getElementById('toast');
+      const toastIcon = document.getElementById('toastIcon');
+      const toastMessage = document.getElementById('toastMessage');
+  
+      toast.className = 'toast ' + type;
+      if (type === 'success') {
+    toastIcon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#fff">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+      </svg>
+    `;
+  } else {
+    toastIcon.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#fff">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+    `;
+  }
+  
+  // Set message
+  toastMessage.textContent = message;
+
+  toast.style.display = 'flex';
+
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}
+
+// Helper function to debounce function calls
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+// Add window beforeunload event to prevent accidental form abandonment
+window.addEventListener('beforeunload', function(e) {
+  const form = document.getElementById('miembroForm');
+  const formElements = form.elements;
+  let formFilled = false;
+  
+  // Check if any field has a value
+  for (let i = 0; i < formElements.length; i++) {
+    const element = formElements[i];
+    if (element.type !== 'submit' && element.type !== 'hidden' && element.value) {
+      formFilled = true;
+      break;
+    }
+  }
+  
+  if (formFilled && !form.submitted) {
+    e.preventDefault();
+    e.returnValue = '¿Está seguro que desea abandonar la página? Los datos ingresados no se guardarán.';
+    return e.returnValue;
+  }
+});
   </script>
 </body>
 </html>
