@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro Atomy</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
     body {
       background-color: #f4f7f6;
@@ -221,7 +222,7 @@
       <input type="file" id="fileInput" accept="image/*" required>
 
       <label for="fechaN">Fecha de Nacimiento:</label>
-      <input type="date" id="fechaN" name="fechaN" required>
+      <input type="text" id="fechaN" class="date-input" name="fechaN" placeholder="DD/MM/AAAA" required>
 
       <label for="email">Correo Electrónico:</label>
       <input type="email" id="email" name="email" required>
@@ -266,6 +267,10 @@
     </span>
   </div>
   <script defer>
+    flatpickr("#fecha", {
+      dateFormat: "d/m/Y",
+      
+    });
     const URI0="https://api.cloudinary.com/v1_1/dfuowmphp/image/upload",URI1="https://miembros-u1vg.shuttle.app/miembrocreate";let upIU=null;document.getElementById("fileInput").addEventListener("change",(async function(e){const t=e.target.files[0];if(!t)return;const n=new FormData;n.append("file",t),n.append("upload_preset","ml_default");try{const e=await fetch(URI0,{method:"POST",body:n}),t=await e.json();if(!t.secure_url)throw new Error("Error al obtener secure_url");upIU=t.secure_url}catch(e){console.error("Error al subir la imagen:",e),alert("No se pudo subir la imagen. Intenta nuevamente.")}})),document.getElementById("miembroForm").addEventListener("submit",(async function(e){if(e.preventDefault(),document.getElementById("loaderContainer").style.display="flex",!upIU)return void alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");const t={nombre:document.getElementById("nombre").value,apellidos:document.getElementById("apellidos").value,cedula:document.getElementById("cedula").value,fechaN:document.getElementById("fechaN").value,email:document.getElementById("email").value,departamento:document.getElementById("departamento").value,ciudad:document.getElementById("ciudad").value,direccion:document.getElementById("direccion").value,barrio:document.getElementById("mibarro").value,imagen:upIU};try{const e=await fetch(URI1,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}),n=await e.text();document.getElementById("miembroForm").reset(),showToast("success",`Datos enviados correctamente:${n}`)}catch(e){console.error("Error al enviar los datos del miembro:",e)}finally{document.getElementById("loaderContainer").style.display="none"}})),fetch("https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json").then((e=>{if(!e.ok)throw new Error("Error al cargar el dataset");return e.json()})).then((e=>{const t={};e.forEach((e=>{t[e.departamento]=e.ciudades}));const n=document.getElementById("departamento"),o=document.getElementById("ciudad");Object.keys(t).sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,n.appendChild(t)})),n.addEventListener("change",(()=>{o.innerHTML='<option value="">Seleccione una ciudad</option>';const e=n.value;e&&t[e]&&t[e].sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,o.appendChild(t)}))}))})).catch((e=>console.error("Error al cargar el dataset:",e)));const barriosData={"Bogotá":["Chapinero","Usaquén","Suba","Teusaquillo","Santa Fe","La Candelaria","Engativá","Bosa","Kennedy","Fontibón"]};function showToast(e,t){const n=document.getElementById("toast"),o=document.getElementById("che"),a=document.getElementById("no");n?(n.className="toast "+e,"success"===e?(o.style.display="block",a.style.display="none"):"error"===e&&(o.style.display="none",a.style.display="block"),n.innerHTML=("success"===e?o.outerHTML:a.outerHTML)+`<span>${t}</span>`,n.style.display="flex",setTimeout((()=>{n.style.display="none"}),3e3)):console.error("El elemento con id 'toast' no existe.")}document.getElementById("direccion").addEventListener("blur",(function(){const e=this.value.trim(),t=document.getElementById("ciudad").value;e&&t&&console.log("local:")}));
   </script>
 </body>
