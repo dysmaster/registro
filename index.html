@@ -1,167 +1,179 @@
+Formulario de registro mejorado
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="Formulario de registro para miembros de Atomy">
   <title>Registro Atomy</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
-    body {
-      background-color: #f4f7f6;
-      font-family: 'Roboto', sans-serif;
+    :root {
+      --primary-color: #5ab9ea;
+      --primary-hover: #489ac4;
+      --text-color: #333;
+      --text-secondary: #555;
+      --background: #f4f7f6;
+      --container-bg: #fff;
+      --border-color: #ddd;
+      --error-color: #dc3545;
+      --success-color: #28a745;
+    }
+    
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    
+    body {
+      background-color: var(--background);
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
     }
+    
     .container {
-      background-color: #fff;
+      background-color: var(--container-bg);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
       padding: 30px;
-      max-width:600px;
-      width:100%;
+      max-width: 600px;
+      width: 100%;
     }
+    
     h2 {
       text-align: center;
-      color: #333;
+      color: var(--text-color);
       margin-bottom: 20px;
     }
+    
     form {
       display: flex;
       flex-direction: column;
     }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
     label {
       font-weight: 500;
       margin-bottom: 5px;
-      color: #555;
+      color: var(--text-secondary);
+      display: block;
     }
+    
     input, select {
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
+      padding: 12px;
+      border: 1px solid var(--border-color);
       border-radius: 4px;
       font-size: 16px;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
       width: 100%;
     }
+    
     input:focus, select:focus {
-      border-color: #5ab9ea;
+      border-color: var(--primary-color);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(90, 185, 234, 0.2);
     }
+    
+    .input-error {
+      border-color: var(--error-color);
+    }
+    
+    .error-message {
+      color: var(--error-color);
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
     button {
       padding: 12px;
       font-size: 16px;
       color: #fff;
-      background-color: #5ab9ea;
+      background-color: var(--primary-color);
       border: none;
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      margin-top: 10px;
     }
+    
     button:hover {
-      background-color: #489ac4;
+      background-color: var(--primary-hover);
     }
+    
+    button:disabled {
+      background-color: var(--border-color);
+      cursor: not-allowed;
+    }
+    
     .hidden {
       display: none;
     }
+    
     #loaderContainer {
-      display:none;position:fixed;top:0;left:0;justify-content:center;align-items:center;width:100vw;height:100vh;background:rgba(231, 231, 231, 0.5);
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(231, 231, 231, 0.8);
+      z-index: 1000;
     }
     
-.loader {
-  position: relative;
-  width: 54px;
-  height: 54px;
-  border-radius: 10px;
-}
-
-.loader div {
-  width: 8%;
-  height: 24%;
-  background: rgb(128, 128, 128);
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  opacity: 0;
-  border-radius: 50px;
-  box-shadow: 0 0 3px rgba(0,0,0,0.2);
-  animation: fade458 1s linear infinite;
-}
-
-@keyframes fade458 {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0.25;
-  }
-}
-
-.loader .bar1 {
-  transform: rotate(0deg) translate(0, -130%);
-  animation-delay: 0s;
-}
-
-.loader .bar2 {
-  transform: rotate(30deg) translate(0, -130%);
-  animation-delay: -1.1s;
-}
-
-.loader .bar3 {
-  transform: rotate(60deg) translate(0, -130%);
-  animation-delay: -1s;
-}
-
-.loader .bar4 {
-  transform: rotate(90deg) translate(0, -130%);
-  animation-delay: -0.9s;
-}
-
-.loader .bar5 {
-  transform: rotate(120deg) translate(0, -130%);
-  animation-delay: -0.8s;
-}
-
-.loader .bar6 {
-  transform: rotate(150deg) translate(0, -130%);
-  animation-delay: -0.7s;
-}
-
-.loader .bar7 {
-  transform: rotate(180deg) translate(0, -130%);
-  animation-delay: -0.6s;
-}
-
-.loader .bar8 {
-  transform: rotate(210deg) translate(0, -130%);
-  animation-delay: -0.5s;
-}
-
-.loader .bar9 {
-  transform: rotate(240deg) translate(0, -130%);
-  animation-delay: -0.4s;
-}
-
-.loader .bar10 {
-  transform: rotate(270deg) translate(0, -130%);
-  animation-delay: -0.3s;
-}
-
-.loader .bar11 {
-  transform: rotate(300deg) translate(0, -130%);
-  animation-delay: -0.2s;
-}
-
-.loader .bar12 {
-  transform: rotate(330deg) translate(0, -130%);
-  animation-delay: -0.1s;
-}
-.toast {
+    .loader {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+    }
+    
+    .loader div {
+      width: 8%;
+      height: 24%;
+      background: rgb(128, 128, 128);
+      position: absolute;
+      left: 50%;
+      top: 30%;
+      opacity: 0;
+      border-radius: 50px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.2);
+      animation: fade458 1s linear infinite;
+    }
+    
+    @keyframes fade458 {
+      from { opacity: 1; }
+      to { opacity: 0.25; }
+    }
+    
+    .loader .bar1 { transform: rotate(0deg) translate(0, -130%); animation-delay: 0s; }
+    .loader .bar2 { transform: rotate(30deg) translate(0, -130%); animation-delay: -1.1s; }
+    .loader .bar3 { transform: rotate(60deg) translate(0, -130%); animation-delay: -1s; }
+    .loader .bar4 { transform: rotate(90deg) translate(0, -130%); animation-delay: -0.9s; }
+    .loader .bar5 { transform: rotate(120deg) translate(0, -130%); animation-delay: -0.8s; }
+    .loader .bar6 { transform: rotate(150deg) translate(0, -130%); animation-delay: -0.7s; }
+    .loader .bar7 { transform: rotate(180deg) translate(0, -130%); animation-delay: -0.6s; }
+    .loader .bar8 { transform: rotate(210deg) translate(0, -130%); animation-delay: -0.5s; }
+    .loader .bar9 { transform: rotate(240deg) translate(0, -130%); animation-delay: -0.4s; }
+    .loader .bar10 { transform: rotate(270deg) translate(0, -130%); animation-delay: -0.3s; }
+    .loader .bar11 { transform: rotate(300deg) translate(0, -130%); animation-delay: -0.2s; }
+    .loader .bar12 { transform: rotate(330deg) translate(0, -130%); animation-delay: -0.1s; }
+    
+    .toast {
       position: fixed;
       top: 20px;
       right: 20px;
@@ -176,21 +188,98 @@
       font-size: 16px;
       z-index: 9999;
       transition: opacity 0.5s ease-in-out;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
+    
     .toast.success {
-      background-color: #c4c4c4;
+      background-color: var(--success-color);
     }
+    
     .toast.error {
-      background-color: #dc3545;
+      background-color: var(--error-color);
     }
+    
     .toast svg {
-      
       margin-right: 10px;
+    }
+    
+    .file-upload {
+      border: 2px dashed var(--border-color);
+      border-radius: 4px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      position: relative;
+    }
+    
+    .file-upload.dragover {
+      border-color: var(--primary-color);
+      background-color: rgba(90, 185, 234, 0.05);
+    }
+    
+    .file-upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .file-upload-label {
+      display: block;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    
+    .file-upload-icon {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--primary-color);
+    }
+    
+    .file-preview {
+      display: none;
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 4px;
+      max-height: 200px;
+    }
+    
+    .file-name {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    .terms-checkbox {
+      display: flex;
+      align-items: flex-start;
+      margin: 15px 0;
+    }
+    
+    .terms-checkbox input {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      margin-top: 2px;
+    }
+    
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      
+      body {
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="loaderContainer" >
+  <div id="loaderContainer">
     <div class="loader">
       <div class="bar1"></div>
       <div class="bar2"></div>
@@ -205,67 +294,100 @@
       <div class="bar11"></div>
       <div class="bar12"></div>
     </div>
-  </div>  
+  </div>
+  
   <div class="container">
     <h2>Registro de Miembro</h2>
-    <form id="miembroForm">
-      <label for="nombre">Nombre Completo:</label>
-      <input type="text" id="nombre" name="nombre" required>
-
-      <label for="apellidos">Apellidos:</label>
-      <input type="text" id="apellidos" name="apellidos" required>
-
-      <label for="cedula">Número de Cédula:</label>
-      <input type="text" id="cedula" name="cedula" required>
-
-      <label for="fileInput">Subir Imagen de Documento</label>
-      <input type="file" id="fileInput" accept="image/*" required>
-
-      <label for="fechaN">Fecha de Nacimiento:</label>
-      <input type="text" id="fechaN" class="date-input" name="fechaN" placeholder="DD/MM/AAAA" required>
-
-      <label for="email">Correo Electrónico:</label>
-      <input type="email" id="email" name="email" required>
-
-      <label for="departamento">Departamento:</label>
-      <select id="departamento" name="departamento" required>
-        <option value="">Seleccione un departamento</option>
-        <!-- Opciones de departamentos -->
-      </select>
-
-      <label for="ciudad">Ciudad/Municipio:</label>
-      <select id="ciudad" name="ciudad" required>
-        <option value="">Seleccione una ciudad</option>
-     
-      </select>
-
-      <label for="direccion">Dirección:</label>
-      <input type="text" id="direccion" name="direccion" required>
-
-      <label for="barrio">Barrio</label>
-      <input type="text" id="mibarro" name="mibarro" required>
-      <div style="display: flex;"><input style="width:18px;height:18px;margin-right:10px;" type="checkbox" required>
-        <a href="https://www.atomy.com/co/home/Common/ProtectPrivacy" target="_blank">Terminos y Condiciones</a>
+    <form id="miembroForm" novalidate>
+      <!-- CSRF Token - This would be generated server-side -->
+      <input type="hidden" id="csrf_token" name="csrf_token" value="GENERATED_TOKEN">
+      
+      <div class="form-group">
+        <label for="nombre">Nombre Completo:</label>
+        <input type="text" id="nombre" name="nombre" required aria-required="true">
+        <div class="error-message" id="nombre-error">Por favor ingrese su nombre completo.</div>
       </div>
-
-      <button type="submit">Enviar</button>
+      
+      <div class="form-group">
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" id="apellidos" name="apellidos" required aria-required="true">
+        <div class="error-message" id="apellidos-error">Por favor ingrese sus apellidos.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="cedula">Número de Cédula:</label>
+        <input type="text" id="cedula" name="cedula" required aria-required="true" pattern="[0-9]{6,12}">
+        <div class="error-message" id="cedula-error">Por favor ingrese un número de cédula válido.</div>
+      </div>
+      
+      <div class="form-group">
+        <div class="file-upload">
+          <div class="file-upload-icon">📁</div>
+          <label class="file-upload-label" for="fileInput">Arrastra o haz clic para subir documento</label>
+          <input type="file" id="fileInput" class="file-upload-input" accept="image/*" required aria-required="true">
+          <img id="imagePreview" class="file-preview" alt="Vista previa del documento">
+          <div class="file-name" id="fileName"></div>
+        </div>
+        <div class="error-message" id="fileInput-error">Por favor seleccione una imagen de su documento.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="fechaN">Fecha de Nacimiento:</label>
+        <input type="text" id="fechaN" class="date-input" name="fechaN" placeholder="DD/MM/AAAA" required aria-required="true">
+        <div class="error-message" id="fechaN-error">Por favor seleccione una fecha de nacimiento válida.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required aria-required="true">
+        <div class="error-message" id="email-error">Por favor ingrese un correo electrónico válido.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="departamento">Departamento:</label>
+        <select id="departamento" name="departamento" required aria-required="true">
+          <option value="">Seleccione un departamento</option>
+        </select>
+        <div class="error-message" id="departamento-error">Por favor seleccione un departamento.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="ciudad">Ciudad/Municipio:</label>
+        <select id="ciudad" name="ciudad" required aria-required="true">
+          <option value="">Seleccione una ciudad</option>
+        </select>
+        <div class="error-message" id="ciudad-error">Por favor seleccione una ciudad o municipio.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required aria-required="true">
+        <div class="error-message" id="direccion-error">Por favor ingrese su dirección.</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="mibarro">Barrio:</label>
+        <input type="text" id="mibarro" name="mibarro" required aria-required="true">
+        <div class="error-message" id="mibarro-error">Por favor ingrese su barrio.</div>
+      </div>
+      
+      <div class="terms-checkbox">
+        <input type="checkbox" id="terms" name="terms" required aria-required="true">
+        <label for="terms">
+          Acepto los <a href="https://www.atomy.com/co/home/Common/ProtectPrivacy" target="_blank" rel="noopener noreferrer">Términos y Condiciones</a>
+        </label>
+      </div>
+      <div class="error-message" id="terms-error">Debe aceptar los términos y condiciones.</div>
+      
+      <button type="submit" id="submitButton">Enviar</button>
     </form>
   </div>
-  <div id="toast" class="toast">
-    <!-- Puedes incluir aquí íconos estáticos o dejarlo vacío -->
-    <span id="che" style="display: none;">
-      <!-- Ícono de éxito -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="20px" height="20px" fill="#75FB4C">
-        <path d="M429-336l238-237-51-51-187 186-85-84-51 51 136 135Zm51 240q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Z"/>
-      </svg>
-    </span>
-    <span id="no" style="display: none;">
-      <!-- Ícono de error -->
-      <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95 1.414-1.414 4.95 4.95z"/>
-      </svg>
-    </span>
+  
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <span id="toastIcon"></span>
+    <span id="toastMessage"></span>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script defer>
     flatpickr("#fechaN", {
