@@ -1,342 +1,272 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-  table {
-  border-collapse: collapse; 
-}
-
-th, td {
-  border: 0.5px solid black;padding: 5px;
-}
-
-td button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent; 
-}
-
-td button:hover {
-  background: black;
-  border-radius:5px;
-}
-
-td button:hover svg {
-  fill: white;
-}
-</style>
-<body>
-  <div style="display: flex;">
-    <h2>Tabla de Miembros</h2>
-    <button onclick="excel('dataTable', 'datos_excel')">
-      <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#169154" d="M29,6H15.744C14.781,6,14,6.781,14,7.744v7.259h15V6z"/><path fill="#18482a" d="M14,33.054v7.202C14,41.219,14.781,42,15.743,42H29v-8.946H14z"/><path fill="#0c8045" d="M14 15.003H29V24.005000000000003H14z"/><path fill="#17472a" d="M14 24.005H29V33.055H14z"/><g><path fill="#29c27f" d="M42.256,6H29v9.003h15V7.744C44,6.781,43.219,6,42.256,6z"/><path fill="#27663f" d="M29,33.054V42h13.257C43.219,42,44,41.219,44,40.257v-7.202H29z"/><path fill="#19ac65" d="M29 15.003H44V24.005000000000003H29z"/><path fill="#129652" d="M29 24.005H44V33.055H29z"/></g><path fill="#0c7238" d="M22.319,34H5.681C4.753,34,4,33.247,4,32.319V15.681C4,14.753,4.753,14,5.681,14h16.638 C23.247,14,24,14.753,24,15.681v16.638C24,33.247,23.247,34,22.319,34z"/><path fill="#fff" d="M9.807 19L12.193 19 14.129 22.754 16.175 19 18.404 19 15.333 24 18.474 29 16.123 29 14.013 25.07 11.912 29 9.526 29 12.719 23.982z"/></svg>
-    </button>
-  </div>
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Documento</th>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>FechaN</th>
-        <th>Email</th>
-        <th>Departamento</th>
-        <th>Ciudad</th>
-        <th>Direccion</th>
-        <th>Barrio</th>
-        <th>Imagen</th>
-        <th>IP</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-      <tr style="display:none;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><button><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#000000"><path d="M228.31-164q-27.01 0-45.66-19Q164-202 164-228.31v-503.38Q164-758 182.65-777q18.65-19 45.66-19h503.38q27.01 0 45.66 19Q796-758 796-731.69v503.38Q796-202 777.35-183q-18.65 19-45.66 19H228.31Zm0-52h503.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-503.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H228.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v503.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM294-298h375.07L543.54-465.38 443.23-335.23l-62-78.31L294-298Zm-78 82v-528 528Z"/></svg></button></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<script defer>
-  function fixEncoding(str) {
-      return new TextDecoder("utf-8").decode(
-        new Uint8Array([...str].map(c => c.charCodeAt(0)))
-      );
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro Atomy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f7f6;
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
+    .container {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+      max-width:600px;
+      width:100%;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    input, select {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      width: 100%;
+    }
+    input:focus, select:focus {
+      border-color: #5ab9ea;
+      outline: none;
+    }
+    button {
+      padding: 12px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #5ab9ea;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #489ac4;
+    }
+    .hidden {
+      display: none;
+    }
+    #loaderContainer {
+      display:none;position:fixed;top:0;left:0;justify-content:center;align-items:center;width:100vw;height:100vh;background:rgba(231, 231, 231, 0.5);
+    }
+    
+.loader {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+}
 
-    // Configurar SSE
-    const eventSource = new EventSource("https://miembros-u1vg.shuttle.app/canal1");
+.loader div {
+  width: 8%;
+  height: 24%;
+  background: rgb(128, 128, 128);
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  opacity: 0;
+  border-radius: 50px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.2);
+  animation: fade458 1s linear infinite;
+}
 
-    eventSource.addEventListener("update", function (event) {
-      console.log("Evento SSE recibido:", event.data);
-      try {
-        let rawData = event.data.trim();
-        if (rawData.startsWith('{"file_data":') && rawData.endsWith("}")) {
-          const parsed = JSON.parse(rawData);
-          
-          const decodedData = atob(parsed.file_data);
-          const jsonString = "[" + decodedData.replace(/}{/g, "},{") + "]";
-          const jsonData = JSON.parse(jsonString);
-          //console.log("JSON Data:", jsonData);
-          const tbody = document.getElementById("dataTable").querySelector("tbody");
-          const rows = tbody.getElementsByTagName("tr");
-          const keys = [
-            "documento", "nombre", "apellidos",
-            "fechaN", "email", "departamento",
-            "ciudad", "direccion", "barrio",,"ip"
-          ];
+@keyframes fade458 {
+  from {
+    opacity: 1;
+  }
 
-          jsonData.forEach((item, index) => {
-            if (index < rows.length) {
-              let row = rows[index];
-          
-              keys.forEach((key, colIndex) => {
-                row.cells[colIndex].textContent = fixEncoding(item[key] ? item[key].toString() : "");
-              });
-              const btn = row.cells[9].querySelector("button.image-btn") || row.cells[9].querySelector("button");
-              if (btn) {
-                btn.setAttribute("data-image", fixEncoding(item.imagen ? item.imagen.toString() : ""));
-              }
-              // Muestra la fila
-              row.style.display = "table-row";
-            }
-          });
-          for (let i = jsonData.length; i < rows.length; i++) {
-            rows[i].style.display = "none";
-          }
-        } else {
-          console.error("Datos SSE no son JSON válidos:", rawData);
-        }
-      } catch (e) {
-        console.error("Error al interpretar los datos SSE:", e);
-      }
-    });
-    document.getElementById("dataTable").addEventListener("click", function (e) {
-      const btn = e.target.closest("button.image-btn") || e.target.closest("button");
-      if (btn && btn.hasAttribute("data-image")) {
-        const imageUrl = btn.getAttribute("data-image");
-        if (imageUrl) {
-          window.open(imageUrl, "_blank");
-        } else {
-          alert("No hay URL de imagen disponible.");
-        }
-      }
-    });
+  to {
+    opacity: 0.25;
+  }
+}
 
-    function excel(tableID, filename = '') {
-      var dataType = 'application/vnd.ms-excel;charset=utf-8;';
-      var tableSelect = document.getElementById(tableID);
-      var tableClone = tableSelect.cloneNode(true);
-     
-      tableClone.querySelectorAll('tr').forEach(tr => {
-        if (tr.style.display === 'none') {
-          tr.style.display = '';
-        }
-      });
+.loader .bar1 {
+  transform: rotate(0deg) translate(0, -130%);
+  animation-delay: 0s;
+}
+
+.loader .bar2 {
+  transform: rotate(30deg) translate(0, -130%);
+  animation-delay: -1.1s;
+}
+
+.loader .bar3 {
+  transform: rotate(60deg) translate(0, -130%);
+  animation-delay: -1s;
+}
+
+.loader .bar4 {
+  transform: rotate(90deg) translate(0, -130%);
+  animation-delay: -0.9s;
+}
+
+.loader .bar5 {
+  transform: rotate(120deg) translate(0, -130%);
+  animation-delay: -0.8s;
+}
+
+.loader .bar6 {
+  transform: rotate(150deg) translate(0, -130%);
+  animation-delay: -0.7s;
+}
+
+.loader .bar7 {
+  transform: rotate(180deg) translate(0, -130%);
+  animation-delay: -0.6s;
+}
+
+.loader .bar8 {
+  transform: rotate(210deg) translate(0, -130%);
+  animation-delay: -0.5s;
+}
+
+.loader .bar9 {
+  transform: rotate(240deg) translate(0, -130%);
+  animation-delay: -0.4s;
+}
+
+.loader .bar10 {
+  transform: rotate(270deg) translate(0, -130%);
+  animation-delay: -0.3s;
+}
+
+.loader .bar11 {
+  transform: rotate(300deg) translate(0, -130%);
+  animation-delay: -0.2s;
+}
+
+.loader .bar12 {
+  transform: rotate(330deg) translate(0, -130%);
+  animation-delay: -0.1s;
+}
+.toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: none; 
+      align-items: center;
+      min-width: 250px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      border: solid 0.5px rgb(197, 197, 197);
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 16px;
+      z-index: 9999;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .toast.success {
+      background-color: #c4c4c4;
+    }
+    .toast.error {
+      background-color: #dc3545;
+    }
+    .toast svg {
       
-      var tableHTML = tableClone.outerHTML;
-
-      filename = filename ? filename + '.xls' : 'excel_data.xls';
-
-      // Crea un Blob con BOM para asegurar la codificación UTF-8
-      var blob = new Blob(["\ufeff", tableHTML], { type: dataType });
-
-      // Crea un enlace para la descarga y haz click en él
-      var downloadLink = document.createElement("a");
-      if (navigator.msSaveOrOpenBlob) {
-        navigator.msSaveOrOpenBlob(blob, filename);
-      } else {
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = filename;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      }
+      margin-right: 10px;
     }
-</script>
+  </style>
+</head>
+<body>
+  <div id="loaderContainer" >
+    <div class="loader">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+      <div class="bar3"></div>
+      <div class="bar4"></div>
+      <div class="bar5"></div>
+      <div class="bar6"></div>
+      <div class="bar7"></div>
+      <div class="bar8"></div>
+      <div class="bar9"></div>
+      <div class="bar10"></div>
+      <div class="bar11"></div>
+      <div class="bar12"></div>
+    </div>
+  </div>  
+  <div class="container">
+    <h2>Registro de Miembro</h2>
+    <form id="miembroForm">
+      <label for="nombre">Nombre Completo:</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="apellidos">Apellidos:</label>
+      <input type="text" id="apellidos" name="apellidos" required>
+
+      <label for="cedula">Número de Cédula:</label>
+      <input type="text" id="cedula" name="cedula" required>
+
+      <label for="fileInput">Subir Imagen de Documento</label>
+      <input type="file" id="fileInput" accept="image/*" required>
+
+      <label for="fechaN">Fecha de Nacimiento:</label>
+      <input type="date" id="fechaN" name="fechaN" required>
+
+      <label for="email">Correo Electrónico:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="departamento">Departamento:</label>
+      <select id="departamento" name="departamento" required>
+        <option value="">Seleccione un departamento</option>
+        <!-- Opciones de departamentos -->
+      </select>
+
+      <label for="ciudad">Ciudad/Municipio:</label>
+      <select id="ciudad" name="ciudad" required>
+        <option value="">Seleccione una ciudad</option>
+     
+      </select>
+
+      <label for="direccion">Dirección:</label>
+      <input type="text" id="direccion" name="direccion" required>
+
+      <label for="barrio">Barrio</label>
+      <input type="text" id="mibarro" name="mibarro" required>
+      <div style="display: flex;"><input style="width:18px;height:18px;margin-right:10px;" type="checkbox" required>
+        <a href="https://www.atomy.com/co/home/Common/ProtectPrivacy" target="_blank">Terminos y Condiciones</a>
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+  <div id="toast" class="toast">
+    <!-- Puedes incluir aquí íconos estáticos o dejarlo vacío -->
+    <span id="che" style="display: none;">
+      <!-- Ícono de éxito -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="20px" height="20px" fill="#75FB4C">
+        <path d="M429-336l238-237-51-51-187 186-85-84-51 51 136 135Zm51 240q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Z"/>
+      </svg>
+    </span>
+    <span id="no" style="display: none;">
+      <!-- Ícono de error -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="24" height="24" viewBox="0 0 24 24">
+        <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95 1.414-1.414 4.95 4.95z"/>
+      </svg>
+    </span>
+  </div>
+  <script defer>
+    const URI0="https://api.cloudinary.com/v1_1/dfuowmphp/image/upload",URI1="https://miembros-u1vg.shuttle.app/miembrocreate";let upIU=null;document.getElementById("fileInput").addEventListener("change",(async function(e){const t=e.target.files[0];if(!t)return;const n=new FormData;n.append("file",t),n.append("upload_preset","ml_default");try{const e=await fetch(URI0,{method:"POST",body:n}),t=await e.json();if(!t.secure_url)throw new Error("Error al obtener secure_url");upIU=t.secure_url}catch(e){console.error("Error al subir la imagen:",e),alert("No se pudo subir la imagen. Intenta nuevamente.")}})),document.getElementById("miembroForm").addEventListener("submit",(async function(e){if(e.preventDefault(),document.getElementById("loaderContainer").style.display="flex",!upIU)return void alert("La imagen aún no se ha cargado. Por favor, espera un momento y vuelve a intentarlo.");const t={nombre:document.getElementById("nombre").value,apellidos:document.getElementById("apellidos").value,cedula:document.getElementById("cedula").value,fechaN:document.getElementById("fechaN").value,email:document.getElementById("email").value,departamento:document.getElementById("departamento").value,ciudad:document.getElementById("ciudad").value,direccion:document.getElementById("direccion").value,barrio:document.getElementById("mibarro").value,imagen:upIU};try{const e=await fetch(URI1,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}),n=await e.text();document.getElementById("miembroForm").reset(),showToast("success",`Datos enviados correctamente:${n}`)}catch(e){console.error("Error al enviar los datos del miembro:",e)}finally{document.getElementById("loaderContainer").style.display="none"}})),fetch("https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.json").then((e=>{if(!e.ok)throw new Error("Error al cargar el dataset");return e.json()})).then((e=>{const t={};e.forEach((e=>{t[e.departamento]=e.ciudades}));const n=document.getElementById("departamento"),o=document.getElementById("ciudad");Object.keys(t).sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,n.appendChild(t)})),n.addEventListener("change",(()=>{o.innerHTML='<option value="">Seleccione una ciudad</option>';const e=n.value;e&&t[e]&&t[e].sort().forEach((e=>{const t=document.createElement("option");t.value=e,t.textContent=e,o.appendChild(t)}))}))})).catch((e=>console.error("Error al cargar el dataset:",e)));const barriosData={"Bogotá":["Chapinero","Usaquén","Suba","Teusaquillo","Santa Fe","La Candelaria","Engativá","Bosa","Kennedy","Fontibón"]};function showToast(e,t){const n=document.getElementById("toast"),o=document.getElementById("che"),a=document.getElementById("no");n?(n.className="toast "+e,"success"===e?(o.style.display="block",a.style.display="none"):"error"===e&&(o.style.display="none",a.style.display="block"),n.innerHTML=("success"===e?o.outerHTML:a.outerHTML)+`<span>${t}</span>`,n.style.display="flex",setTimeout((()=>{n.style.display="none"}),3e3)):console.error("El elemento con id 'toast' no existe.")}document.getElementById("direccion").addEventListener("blur",(function(){const e=this.value.trim(),t=document.getElementById("ciudad").value;e&&t&&console.log("local:")}));
+  </script>
+</body>
 </html>
